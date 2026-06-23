@@ -18,10 +18,11 @@ ARG VBT_EXTRAS=""
 
 COPY --chown=${NB_UID}:${NB_GID} . /tmp/vectorbt
 
-RUN python -m pip install --no-cache-dir -U pip setuptools wheel \
-    && python -m pip install --no-cache-dir "/tmp/vectorbt${VBT_EXTRAS:+[${VBT_EXTRAS}]}" \
+RUN python -m pip install --no-cache-dir -U pip "setuptools<82" wheel
+RUN python -m pip install --no-cache-dir jupyter-collaboration
+RUN python -m pip install --no-cache-dir "/tmp/vectorbt${VBT_EXTRAS:+[${VBT_EXTRAS}]}" \
     && rm -rf /tmp/vectorbt
 
 EXPOSE 8888
 
-CMD ["start-notebook.py", "--ServerApp.ip=0.0.0.0", "--ServerApp.port=8888"]
+CMD ["start-notebook.py", "--ServerApp.ip=0.0.0.0", "--ServerApp.port=8888", "--ServerApp.root_dir=/home/jovyan/work"]
